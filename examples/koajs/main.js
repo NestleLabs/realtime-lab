@@ -77,8 +77,9 @@ socket.on('connection', (ws, req) => {
 router.get("/health", function (ctx, next) {
     logInfo(" [api] health");
     ctx.body = JSON.stringify({
-        state: socket.readyState,
-        client_len: socket._clients.length
+        client_len: socket._clients && socket._clients.length,
+        refs: "clients",
+        clients: socket._client && socket._clients.map(e => ({...e}))
     });
 });
 
