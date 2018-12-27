@@ -17,17 +17,18 @@ const cmd = (argv) => {
     if (_args[1] !== '-p') {
         Usage();
         exit(0);
-    } else {
-        const port = _args[2];
-        if (!port) {
-            Usage();
-            exit(0);
-        }
-        logInfo(`port: ${port}`);
+    }
+    const port = _args[2];
+    if (!port) {
+        Usage();
+        exit(0);
+    }
+    return {
+        port
     }
 }
 
-cmd(argv);
+const appEnv = cmd(argv);
 
 router.get('/cable', (ctx, future) => {
     ctx.body = 'OK';
@@ -38,7 +39,7 @@ app.use(router.routes())
     .use(router.allowedMethods());
 
 const httpServer = http.createServer(app.callback());
-const listener = httpServer.listen(3000, () => {
+const listener = httpServer.listen(appEnv.port, () => {
     const address = listener.address();
-    logInfo('listening on port %s', address.port);
+    logInfo('listening on port', address.port);
 });
