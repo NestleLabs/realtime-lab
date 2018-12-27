@@ -78,8 +78,7 @@ router.get("/health", function (ctx, next) {
     logInfo(" [api] health");
     ctx.body = JSON.stringify({
         state: socket.readyState,
-        client_len: socket._clients.length,
-        name: '2333'
+        client_len: socket._clients.length
     });
 });
 
