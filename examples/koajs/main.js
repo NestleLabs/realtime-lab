@@ -1,9 +1,12 @@
 'use strict';
 const Koa = require('koa');
 const Router = require('koa-router');
-const router = new Router();
 const http = require('http');
+const WebSocket = require('ws');
+
+const router = new Router();
 const app = new Koa();
+
 const logInfo = (...args) => console.log("[INFO]", ...args);
 
 const {exit, argv} = process;
@@ -13,15 +16,11 @@ function Usage() {
 }
 
 const cmd = (argv) => {
-    const _args = argv.slice(1);
-    if (_args[1] !== '-p') {
-        Usage();
-        exit(0);
-    }
-    const port = _args[2];
-    if (!port) {
-        Usage();
-        exit(0);
+    const _args = argv.slice(2);
+    if (!_args.length) return {};
+    const [optionPort, port] = _args;
+    if (optionPort !== '-p' || !port) {
+        Usage(); exit(0);
     }
     return {
         port
@@ -30,16 +29,65 @@ const cmd = (argv) => {
 
 const appEnv = cmd(argv);
 
-router.get('/cable', (ctx, future) => {
-    ctx.body = 'OK';
-    ctx.status = 200;
+const httpServer = http.createServer(app.callback());
+
+const socket = new WebSocket.Server({
+    path: '/cable',
+    server: httpServer
+});
+
+//socket.broadcast = function (data) {
+//    socket.clients.forEach(client =>
+//        client.readyState === socket.OPEN &&
+//        client.send(data))
+//}
+socket.broadcast = function (data) {
+    socket._clients.forEach(client => client.send(data))
+}
+
+function parseMessage(message) {
+    try {
+        return JSON.parse(message);
+    } catch (err) {
+        return message;
+    }
+}
+
+socket.on('connection', (ws, req) => {
+    logInfo(" [x] open socket ip " + req.connection.remoteAddress);
+    socket._clients = socket._clients || [];
+    socket._clients.push(ws);
+
+    ws.on('message', (message) => {
+        logInfo(" [x] Got Message. " + message);
+        const msg = parseMessage(message);
+        if (msg.type === "AI") {
+            console.log(" [x] Boardcast by AI: ");
+            socket.broadcast(JSON.stringify({message: msg.message}));
+            return;
+        }
+        ws.send("pong");
+    });
+    ws.on('close', () => {
+        logInfo(" [x] socket closed. ");
+    });
+});
+
+
+router.get("/health", function (ctx, next) {
+    logInfo(" [api] health");
+    ctx.body = JSON.stringify({
+        state: socket.readyState,
+        client_len: socket._clients.length,
+        name: '2333'
+    });
 });
 
 app.use(router.routes())
     .use(router.allowedMethods());
 
-const httpServer = http.createServer(app.callback());
 const listener = httpServer.listen(appEnv.port, () => {
     const address = listener.address();
     logInfo('listening on port', address.port);
 });
+

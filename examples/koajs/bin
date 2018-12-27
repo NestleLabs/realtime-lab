@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+const Events = require('events');
+const ws = require('ws');
+const client = new ws("ws://localhost:3000/cable");
+
+const bus = new Events();
+Object.assign(client, {
+    onopen (evt) {
+        console.log("connect opened");
+    },
+    onclose (evt) {
+        console.log("connect closed");
+    },
+    onmessage (evt) {
+        bus.emit('data', evt);
+    },
+});
+require('readline')
+    .createInterface({input: process.stdin,output: process.stdout})
+    .on('line', (answer) => {
+        var _answer = "葬爱家族村口王师傅: " + answer.replace(/吗?\?$/g, '!');
+        //bus.on("data", function () {
+        //    console.log("[reply from server]:", _answer)
+        //});
+        client.send(JSON.stringify({"type": "AI" , "message": _answer}))
+    });

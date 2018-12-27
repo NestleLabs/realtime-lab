@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "bin": {
-      "getup": "node ."
+    "getup": "node ."
   },
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon . -p 3000"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,9 @@
   "dependencies": {
     "koa": "^2.6.2",
     "koa-router": "^7.4.0",
-    "socket.io": "^2.2.0"
+    "ws": "^6.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
   }
 }
