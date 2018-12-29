@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 const Events = require('events');
 const ws = require('ws');
-const client = new ws("ws://localhost:3000/cable");
+const {exit, argv}= require('process');
+const [_, cmd] = argv.slice(1);
+function Usage () {
+    console.log("Usage: <cmd> <port>");
+}
+!cmd && Usage() && exit(0);
+const port = cmd;
+const client = new ws(`ws://localhost:${port}/cable`);
 
 const bus = new Events();
 Object.assign(client, {
@@ -23,4 +30,5 @@ require('readline')
         //    console.log("[reply from server]:", _answer)
         //});
         client.send(JSON.stringify({"type": "AI" , "message": _answer}))
+        console.log("\n");
     });
