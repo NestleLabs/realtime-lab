@@ -41,9 +41,15 @@ ExternalProject_Add(json
     #CONFIGURE_COMMAND ""
     #BUILD_COMMAND ""
 )
-include_directories("vendor/asio/src/asio/asio/include" ${EXTERNAL_INSTALL_LOCATION}/include )
+include_directories(
+    "vendor/asio/src/asio/asio/include"
+    ${EXTERNAL_INSTALL_LOCATION}/include
+    ${CMAKE_BINARY_DIR}
+)
 link_directories(${EXTERNAL_INSTALL_LOCATION}/lib)
+
+add_library(utils utils.cxx utils.hxx)
 
 add_definitions(-DASIO_STANDALONE)
 add_executable(chat-server main.cxx)
-add_dependencies(chat-server websocketpp json)
+add_dependencies(chat-server websocketpp json utils)

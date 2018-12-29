@@ -5,6 +5,8 @@
 
 #include <cstdlib>
 
+#include "utils.hxx"
+
 using namespace std;
 
 typedef websocketpp::server<websocketpp::config::asio> server;
@@ -32,23 +34,9 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     }
 }
 
-class ArgvRange{
-    public:
-        ArgvRange(int argc, const char * const argv[])
-            : argc_(argc), argv_(argv)
-        {
-        }
-
-        const char * const *begin() const { return argv_; }
-        const char * const *end() const { return argv_ + argc_; }
-
-    private:
-        const int argc_;
-        const char * const *argv_;
-};
-
 int main(int argc, char** argv) {
     server echo_server;
+
     string portOption(argv[1]);
     if (argc < 2 || portOption != "-p") {
         cout << "Usage: -p <port>" << endl;

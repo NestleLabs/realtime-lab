@@ -18,3 +18,5 @@ chat-server
 .gradle
 gradle/
 examples/cxx/external/
+**/*.a
+**/*.o
