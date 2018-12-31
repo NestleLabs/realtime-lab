@@ -1,7 +1,7 @@
 #ifndef _CHAT_SERVER_UTILS_HXX_
 #define _CHAT_SERVER_UTILS_HXX_
 
-
+#include <iostream>
 /**
  * Example:
  * int main (int argc, char *argv) {
@@ -19,9 +19,18 @@ class argv_range {
 
         const char * const *begin() const { return argv_; }
         const char * const *end() const { return argv_ + argc_; }
+
     private:
         const int argc_;
         const char * const *argv_;
+
+    public:
+        friend std::ostream& operator<< (std::ostream& stream, const argv_range& self) {
+            for (const char *argv: self) {
+                stream << argv << std::endl;
+            }
+            return stream;
+        }
 };
 
 #endif
