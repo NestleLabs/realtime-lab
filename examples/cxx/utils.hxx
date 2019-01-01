@@ -11,22 +11,23 @@
  *
  **/
 
+template<class T>
 class argv_range {
     public:
-        argv_range(int argc, const char * const *argv)
+        argv_range(int argc, const T * const *argv)
          : argc_(argc), argv_(argv)
         {}
 
-        const char * const *begin() const { return argv_; }
-        const char * const *end() const { return argv_ + argc_; }
+        const T * const *begin() const { return argv_; }
+        const T * const *end() const { return argv_ + argc_; }
 
     private:
         const int argc_;
-        const char * const *argv_;
+        const T * const *argv_;
 
     public:
         friend std::ostream& operator<< (std::ostream& stream, const argv_range& self) {
-            for (const char *argv: self) {
+            for (const T *argv: self) {
                 stream << argv << std::endl;
             }
             return stream;
