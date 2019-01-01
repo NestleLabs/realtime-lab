@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>socket lab</title>
+</head>
+<body>
+    <div id="notice" class="notification is-primary hidden">
+        <button class="delete"> </button> Lorem ipsum dolor sit amet,
+        <a href="#">consectetur</a> adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit
+    </div>
+    <div class="rows">
+        <div class="row">
+            <section class="columns is-centered">
+                <h5 class="column title">Socket Lab</h5>
+            </section>
+        </div>
+        <div class="row">
+            <div class="field">
+              <input id="ws" type="checkbox" name="ws" class="switch">
+              <label for="ws">WebSocket状态: <span id="ws-status">关闭</span></label>
+            </div>
+        </div>
+        <div class="row">
+            <section class="section box">
+                    <form id="formA" class="columns" >
+                        <div class="column">
+                            <div class="field">
+                                <label class="label" for="message">消息: </label>
+                                <input class="input" type="text" name="message" value="" />
+                            </div>
+                            <div class="field">
+                                <button class="button is-success">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </article>
+            </section>
+        </div>
+    </div>
+    <template id="notice_tmpl">
+        <button class="delete"> </button> {action}
+        {content}
+    </template>
+</body>
+</html>
